@@ -99,7 +99,7 @@ export default function UserReports() {
             />
           }
           name='Total earnings'
-          value='$10987.4'
+          value='$10,987.4'
         />
         <MiniStatistics
           endContent={

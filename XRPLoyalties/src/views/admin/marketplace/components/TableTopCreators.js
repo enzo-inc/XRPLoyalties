@@ -60,7 +60,6 @@ function TopCreatorTable(props) {
           <Text color={textColor} fontSize='xl' fontWeight='600'>
             Top Listeners
           </Text>
-          <Button variant='action'>See all</Button>
         </Flex>
         <Table {...getTableProps()} variant='simple' color='gray.500'>
           <Thead>
