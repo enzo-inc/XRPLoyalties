@@ -83,13 +83,20 @@ def deploy(mcoCont):
 
     # Not accounted for in the incomeBeneficiariesList:
     # StreamingService = 10%
+    # incomePercentagesList = [
+    #     Web3.toBytes(2),  # 2%
+    #     Web3.toBytes(1),  # 1%
+    #     Web3.toBytes(50),  # 50%
+    #     Web3.toBytes(1),  # 1%
+    #     Web3.toBytes(20),  # 20%
+    # ]
 
     incomePercentagesList = [
-        Web3.toBytes(2),  # 2%
-        Web3.toBytes(1),  # 1%
-        Web3.toBytes(50),  # 50%
-        Web3.toBytes(1),  # 1%
-        Web3.toBytes(20),  # 20%
+        2,  # 2%
+        1,  # 1%
+        50,  # 50%
+        1,  # 1%
+        20,  # 20%
     ]
 
     # The content URI is a string of the contract metadata
@@ -119,8 +126,8 @@ def deploy(mcoCont):
     print("Contract address:", contract_address)
 
     # a = cont.getDeonticExpressions()
-    b = contract_deployed.getIncomePercentagesBy(accounts[2])
-    print(b)
+    # b = contract_deployed.getIncomePercentagesBy(accounts[2])
+    # print(b)
 
     return contract_deployed
 
