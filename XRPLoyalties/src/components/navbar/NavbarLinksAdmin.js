@@ -22,7 +22,6 @@ import React from 'react';
 // Assets
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
-import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 export default function HeaderLinks(props) {
@@ -52,7 +51,7 @@ export default function HeaderLinks(props) {
 			borderRadius="30px"
 			boxShadow={shadow}>
 			<SearchBar mb={secondary ? { base: '10px', md: 'unset' } : 'unset'} me="10px" borderRadius="30px" />
-			<Flex
+			{/* <Flex
 				bg={ethBg}
 				display={secondary ? 'flex' : 'none'}
 				borderRadius="30px"
@@ -70,7 +69,7 @@ export default function HeaderLinks(props) {
 						ETH
 					</Text>
 				</Text>
-			</Flex>
+			</Flex> */}
 			<SidebarResponsive routes={routes} />
 			<Menu>
 				<MenuButton p="0px">
