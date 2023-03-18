@@ -22,7 +22,7 @@
 */
 
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useHistory } from "react-router-dom";
 // Chakra imports
 import {
   Box,
@@ -48,8 +48,29 @@ import { FcGoogle } from "react-icons/fc";
 import GemWalletIcon from "components/icons/gem1.png";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
+import { isConnected, getAddress, getNetwork, getPublicKey } from "@gemwallet/api";
+
 
 function SignIn() {
+
+  // Gem Wallet
+  const connect = async () => {
+    const hasWallet = await isConnected();
+    if (hasWallet) {
+      const responsePublicKey = await getPublicKey();
+      if (responsePublicKey) {
+        const { address, publicKey } = responsePublicKey;
+        // pbk = publicKey;
+        // document.getElementById("address").textContent = address;
+        window.open("/admin/default", "_self");
+      }
+    } else {
+      alert(
+        "User doesn't have GemWallet! Please install it: https://gemwallet.app"
+      );
+    }
+  };
+
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
@@ -117,7 +138,8 @@ function SignIn() {
             fontWeight='500'
             _hover={googleHover}
             _active={googleActive}
-            _focus={googleActive}>
+            _focus={googleActive}
+            onClick={connect}>
             <img src={GemWalletIcon} style={{width: '10%', height: '190%', display: 'block', margin: '10px'}}/>
             {/* <Icon as={GemWalletIcon} w='40px' h='40px' me='20px' /> */}
             Sign In as an artist
