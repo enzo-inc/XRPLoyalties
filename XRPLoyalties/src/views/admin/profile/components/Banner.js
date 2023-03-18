@@ -1,5 +1,6 @@
 // Chakra imports
-import { Avatar, Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Text, useColorModeValue, Button} from "@chakra-ui/react";
+import Avatar1 from "assets/img/avatars/avatar1.png";
 import Card from "components/card/Card.js";
 import React from "react";
 
@@ -13,7 +14,7 @@ export default function Banner(props) {
     "#111C44 !important"
   );
   return (
-    <Card mb={{ base: "0px", lg: "20px" }} align='center'>
+    <Card mb={{base: "0px", lg: "20px" }} align='center' w='100%'>
       <Box
         bg={`url(${banner})`}
         bgSize='cover'
@@ -23,7 +24,7 @@ export default function Banner(props) {
       />
       <Avatar
         mx='auto'
-        src={avatar}
+        src={Avatar1}
         h='87px'
         w='87px'
         mt='-43px'
@@ -42,7 +43,7 @@ export default function Banner(props) {
             {posts}
           </Text>
           <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
-            Posts
+            Songs
           </Text>
         </Flex>
         <Flex mx='auto' me='60px' align='center' direction='column'>
@@ -62,6 +63,20 @@ export default function Banner(props) {
           </Text>
         </Flex>
       </Flex>
+
+      <Flex mx='auto' me='60px' align='center' direction='column'>
+      <Button
+          me='100%'
+          mb='10px'
+          w='140px'
+          minW='300px'
+          mt={{ base: "100px", "2xl": "auto" }}
+          variant='brand'
+          fontWeight='500'
+          fontSize="2xl">
+          Collect Royalties
+        </Button>
+        </Flex>
     </Card>
   );
 }

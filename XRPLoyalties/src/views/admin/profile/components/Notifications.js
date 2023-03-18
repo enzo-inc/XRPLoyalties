@@ -28,14 +28,14 @@ export default function Notifications(props) {
         fontSize="sm"
         mb="20px"
         id="1"
-        label="Item update notifications"
+        label="New royalites received"
       />
       <SwitchField
         reversed={true}
         fontSize="sm"
         mb="20px"
         id="2"
-        label="Item comment notifications"
+        label="New song added"
       />
       <SwitchField
         isChecked={true}
@@ -43,7 +43,7 @@ export default function Notifications(props) {
         fontSize="sm"
         mb="20px"
         id="3"
-        label="Buyer review notifications"
+        label="New listener"
       />
       <SwitchField
         isChecked={true}
@@ -51,14 +51,14 @@ export default function Notifications(props) {
         fontSize="sm"
         mb="20px"
         id="4"
-        label="Rating reminders notifications"
+        label="Daily statistics available"
       />
       <SwitchField
         reversed={true}
         fontSize="sm"
         mb="20px"
         id="5"
-        label="Meetups near you notifications"
+        label="Monthly statistics available"
       />
       <SwitchField
         reversed={true}
@@ -73,14 +73,14 @@ export default function Notifications(props) {
         fontSize="sm"
         mb="20px"
         id="7"
-        label="New launches and projects"
+        label="Royalties distribution changes"
       />
       <SwitchField
         reversed={true}
         fontSize="sm"
         mb="20px"
         id="8"
-        label="Monthly product changes"
+        label="Incoming event"
       />
       <SwitchField
         isChecked={true}
@@ -94,7 +94,7 @@ export default function Notifications(props) {
         reversed={true}
         fontSize="sm"
         id="10"
-        label="Email me when someone follows me"
+        label="Email me when new royalites are ready to collect"
       />
     </Card>
   );
