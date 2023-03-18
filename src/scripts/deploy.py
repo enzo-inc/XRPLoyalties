@@ -81,6 +81,9 @@ def deploy(mcoCont):
         accounts[6],
     ]
 
+    # Not accounted for in the incomeBeneficiariesList:
+    # StreamingService = 10%
+
     incomePercentagesList = [
         Web3.toBytes(2),  # 2%
         Web3.toBytes(1),  # 1%
