@@ -37,13 +37,13 @@ The [MPEG-21 Media Contract Ontology (MCO)](https://www.semanticscholar.org/pape
 To run the web app there are only three easy steps:
 
     1. In your terminal navigate to the "XRPLoyalties" directory and execute:
-    ```console
+    
         npm install
-    ```
+    
     2. Then run:
-    ```console
+    
         npm start
-    ```  
+      
     3. Enjoy using the App!
 
 Note: Currently not all functionalities are developed. The app will be fully connected to the backend logic and completely working in future development cycles.
