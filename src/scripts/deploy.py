@@ -35,7 +35,8 @@ def deploy(mcoCont):
     owner = get_account()
 
     # owner = accounts[0]
-    alice = accounts[1]
+    # Set the owner of the NFT contract on Ripple EVM sidechain
+    alice = "0x6CE64fd11f85EFaA4c02993412e62fe7641603D0"
 
     partiesAcc = list(accounts[2:2 + len(mcoCont['parties'])])
 
@@ -92,11 +93,11 @@ def deploy(mcoCont):
     # ]
 
     incomePercentagesList = [
-        2,  # 2%
-        1,  # 1%
+        30,  # 30%
+        5,  # 5%
         50,  # 50%
-        1,  # 1%
-        20,  # 20%
+        5,  # 5%
+        10,  # 10%
     ]
 
     # The content URI is a string of the contract metadata

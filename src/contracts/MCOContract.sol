@@ -6,9 +6,9 @@ import "./EnumerableMapAddressToUint.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 //import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
+//import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 
-contract MCOContract is Ownable, PaymentSplitter {
+contract MCOContract is Ownable {
     using SafeMath for uint256;
     using EnumerableSet for EnumerableSet.AddressSet;
     using EnumerableSet for EnumerableSet.UintSet;
@@ -16,8 +16,9 @@ contract MCOContract is Ownable, PaymentSplitter {
 
     // Contract unique identifier
     bytes private _identifier;
-    // Contract parties address
-    EnumerableSet.AddressSet _parties;
+    // Contract parties address string map array in Ripple
+    // EnumerableSet.AddressSet _parties;
+    string[] public _parties;
     // Contract deontic expression NFtoken
     NFToken public _nfToken;
     // Contract deontic expressions token id
@@ -25,7 +26,12 @@ contract MCOContract is Ownable, PaymentSplitter {
     // Contract objects token id
     EnumerableSet.UintSet _objects;
     // Contract relations with other contracts
-    EnumerableMap.AddressToUintMap _contractRelations;
+//    EnumerableMap.AddressToUintMap _contractRelations;
+    struct ContractInfo {
+        string contractAddress;
+        uint256 relation;
+        }
+    mapping(string => ContractInfo) private _contractRelations;
     // Contract related income percentages for payments
 //    mapping(address => EnumerableMap.AddressToUintMap) _incomePercentages;
     // Contract content URI
@@ -33,28 +39,28 @@ contract MCOContract is Ownable, PaymentSplitter {
     // Contract content HASH
     bytes public _contentHash;
     // Add a mapping to keep track of income owned
-    mapping(address => uint256) private _incomeOwned;
+    mapping(string => uint256) private _incomeOwned;
     // Define the royalty _recipient:
     address payable public _recipient;
-    // Define the income beneficiary addresses
-    address[] public _incomeBeneficiaries;
+    // Define the income beneficiary addresses in a string array
+    string[] public _incomeBeneficiaries;
+//    address[] public _incomeBeneficiaries;
     // Define the income percentages for each beneficiary
     uint256[] public _incomePercentages;
 
     constructor(
         bytes memory identifier,
-        address[] memory parties,
+        string[] memory parties,
         NFToken nfToken,
         uint256[] memory deonticExpressionsIds,
         uint256[] memory objects,
-        address[] memory relatedContracts,
+        string[] memory relatedContracts,
         uint256[] memory relations,
-        address[] memory incomeBeneficiaries,
+        string[] memory incomeBeneficiaries,
         uint256[] memory incomePercentages,
         string memory contentUri,
         bytes memory contentHash
     )
-    PaymentSplitter(incomeBeneficiaries, incomePercentages) payable
     {
         // Set the royalty _recipient by:
         // - using the deployer address
@@ -63,8 +69,9 @@ contract MCOContract is Ownable, PaymentSplitter {
         _recipient = payable(address(this));
 
         _identifier = identifier;
+
         for (uint256 i = 0; i < parties.length; i++) {
-            _parties.add(parties[i]);
+            _parties.push(parties[i]);
         }
         _nfToken = nfToken;
         for (uint256 i = 0; i < deonticExpressionsIds.length; i++) {
@@ -73,8 +80,9 @@ contract MCOContract is Ownable, PaymentSplitter {
         for (uint256 i = 0; i < objects.length; i++) {
             _objects.add(objects[i]);
         }
+        // Update the _contractRelations mapping with a for loop
         for (uint256 i = 0; i < relatedContracts.length; i++) {
-            _contractRelations.set(relatedContracts[i], relations[i]);
+            _contractRelations[relatedContracts[i]] = ContractInfo(relatedContracts[i], relations[i]);
         }
 //        for (uint256 i = 0; i < incomePercentages.length; ) {
 //            EnumerableMap.AddressToUintMap storage incomeMap =
@@ -90,28 +98,9 @@ contract MCOContract is Ownable, PaymentSplitter {
         _contentHash = contentHash;
     }
 
-//    function payTo(address payable beneficiary, uint256 amount) public payable {
-//        uint256 finalAmount = amount;
-//        uint256 l = _incomePercentages[beneficiary].length();
-//        if (l != 0) {
-//            for (uint256 i = 0; i < l; i++) {
-//                (address incomeBeneficiary, uint256 incomePercentage) =
-//                    _incomePercentages[beneficiary].at(i);
-//                uint256 subAmount = amount.mul(incomePercentage).div(100);
-//                payTo(payable(incomeBeneficiary), subAmount);
-//                finalAmount = finalAmount.sub(subAmount);
-//            }
-//        }
-//        beneficiary.transfer(finalAmount);
-//    }
-
-    function getParties() public view returns (address[] memory) {
-        address[] memory parties = new address[](_parties.length());
-        for (uint256 i = 0; i < _parties.length(); i++) {
-            parties[i] = _parties.at(i);
-        }
-
-        return parties;
+    // @dev Returns all the contract parties
+    function getParties() public view returns (string[] memory) {
+        return _parties;
     }
 
     function getDeonticExpressions() public view returns (uint256[] memory) {
@@ -132,12 +121,16 @@ contract MCOContract is Ownable, PaymentSplitter {
         return objects;
     }
 
-    function getContractRelations()
-        public
-        view
-        returns (address[] memory, uint256[] memory)
-    {
-        return _contractRelations.getAll();
+    // @dev Returns all the contract relations stored in the mapping _contractRelations
+    function getContractRelations() public view returns (string[] memory, uint256[] memory) {
+        string[] memory relatedContracts = new string[](_parties.length);
+        uint256[] memory relations = new uint256[](_parties.length);
+        for (uint256 i = 0; i < _parties.length; i++) {
+            relatedContracts[i] = _contractRelations[_parties[i]].contractAddress;
+            relations[i] = _contractRelations[_parties[i]].relation;
+        }
+
+        return (relatedContracts, relations);
     }
 
 //    function getIncomePercentagesBy(address sharer)
@@ -159,7 +152,7 @@ contract MCOContract is Ownable, PaymentSplitter {
     function updateIncomeOwned(uint256 amount) public onlyOwner {
         uint256 l = _incomeBeneficiaries.length;
         for (uint256 i = 0; i < l; i++) {
-            address incomeBeneficiary = _incomeBeneficiaries[i];
+            string memory incomeBeneficiary = _incomeBeneficiaries[i];
             uint256 incomePercentage = _incomePercentages[i];
             uint256 incomeAmount = amount.mul(incomePercentage).div(100);
             _incomeOwned[incomeBeneficiary] = _incomeOwned[incomeBeneficiary].add(incomeAmount);
@@ -167,13 +160,34 @@ contract MCOContract is Ownable, PaymentSplitter {
     }
 
     // @dev Reduce the income owned to an specific incomeBeneficiary address
-    function reduceIncomeOwned(address incomeBeneficiary, uint256 amount) public onlyOwner {
+    function reduceIncomeOwned(string memory incomeBeneficiary, uint256 amount) public onlyOwner {
         _incomeOwned[incomeBeneficiary] = _incomeOwned[incomeBeneficiary].sub(amount);
     }
 
     // @dev Get income owned to an specific incomeBeneficiary address
-    function getIncomeOwned(address incomeBeneficiary) public onlyOwner view returns (uint256) {
+    function getIncomeOwned(string memory incomeBeneficiary) public onlyOwner view returns (uint256) {
         return _incomeOwned[incomeBeneficiary];
     }
+
+    // @dev Update the income percentage for an incomeBeneficiary address
+    function updateIncomePercentage(string memory incomeBeneficiary, uint256 incomePercentage) public onlyOwner {
+        uint256 l = _incomeBeneficiaries.length;
+        for (uint256 i = 0; i < l; i++) {
+            if (keccak256(abi.encodePacked(_incomeBeneficiaries[i])) == keccak256(abi.encodePacked(incomeBeneficiary))) {
+                _incomePercentages[i] = incomePercentage;
+            }
+        }
+    }
+
+    // @dev Get income percentage for an incomeBeneficiary address
+    function getIncomePercentage(string memory incomeBeneficiary) public onlyOwner view returns (uint256) {
+        uint256 l = _incomeBeneficiaries.length;
+        for (uint256 i = 0; i < l; i++) {
+            if (keccak256(abi.encodePacked(_incomeBeneficiaries[i])) == keccak256(abi.encodePacked(incomeBeneficiary))) {
+                return _incomePercentages[i];
+            }
+        }
+    }
+
 
 }
