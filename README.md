@@ -48,6 +48,20 @@ To run the web app there are only three easy steps:
 
 Note: Currently not all functionalities are developed. The app will be fully connected to the backend logic and completely working in future development cycles.
 
+# Process Flow
+To run a demo of a royalties distribution process from a Property Rights Organization to the different rights holders, follow these steps:
+
+    1. Add the EVM sidechain configuration:
+        brownie networks import ./src/network-config.yaml
+
+    2. To mint an NFT for an IP Entity of a Song and deploy the MPEG-21 Media Contract Ontology (MCO)'s smart contract, run:
+    
+        brownie run ./src/scripts/deploy.py main True --network ripple-evm-sidechain
+    
+    3. To run a demo from the distribution of royalties from a Property Rights Organization to the different rights holders, which interacts with the deployed MCO Smart Contract in the EVM Sidechain and Escrow Accounts in the XRPL, run:
+    
+        brownie run ./src/scripts/demo.py --network ripple-evm-sidechain
+
 # References
 
 - [ISO/IEC 21000-23:2022 Information technology — Multimedia framework (MPEG-21) — Part 23: Smart Contracts for Media](https://www.iso.org/standard/82527.html)
