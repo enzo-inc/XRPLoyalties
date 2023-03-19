@@ -13,7 +13,6 @@ export function SidebarBrand() {
   //   Chakra color mode
   let logoColor = useColorModeValue("navy.700", "white");
 
-  // <span> <img src="XRPLoyalties Logo - Transparent.png" h='26px' w='175px' /> </span>
 
   return (
     <Flex align='center' direction='column'>

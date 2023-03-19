@@ -100,31 +100,7 @@ export default function Conversion(props) {
             textAlign='start'>
             Royalties to Karina Enzo
           </Text>
-          {/* <Icon
-            ms='auto'
-            as={MdDragIndicator}
-            color='secondaryGray.600'
-            w='24px'
-            h='24px'
-          /> */}
         </Flex>
-        {/* <Flex mb='20px'>
-          <Checkbox defaultChecked me='16px' colorScheme='brandScheme' />
-          <Text
-            fontWeight='bold'
-            color={textColor}
-            fontSize='md'
-            textAlign='start'>
-            Promotional LP
-          </Text>
-          <Icon
-            ms='auto'
-            as={MdDragIndicator}
-            color='secondaryGray.600'
-            w='24px'
-            h='24px'
-          /> */}
-        {/* </Flex> */}
       </Box>
     </Card>
   );

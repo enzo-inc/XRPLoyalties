@@ -59,7 +59,6 @@ export default function AuthNavbar(props) {
   } = useDisclosure();
   // Menus
   function getLinks(routeName) {
-    console.log("AAAAAAAAAAaaa")
 
     let foundRoute = routes.filter(function (route) {
       return route.items && route.name === routeName;
@@ -83,7 +82,6 @@ export default function AuthNavbar(props) {
   let dashboardsObject = getLinks("Dashboards");
   let nftsObject = getLinks("NFTs");
   let logoColor = useColorModeValue("white", "white");
-  // Chakra color mode
 
   const textColor = useColorModeValue("navy.700", "white");
   let menuBg = useColorModeValue("white", "navy.900");
@@ -108,34 +106,9 @@ export default function AuthNavbar(props) {
         <span> <img src="XRPLoyalties Logo - Transparent.png" h='26px' w='175px' /> </span>
       </Stack>
       <Text fontsize='sm' mt='3px'>
-        {/* {logoText} */}
       </Text>
     </Link>
   );
-  // if (props.secondary === true) {
-  //   brand = (
-  //     <Link
-  //       minW='175px'
-  //       href={`${process.env.PUBLIC_URL}/#/`}
-  //       target='_blank'
-  //       display='flex'
-  //       lineHeight='100%'
-  //       fontWeight='bold'
-  //       justifyContent='center'
-  //       alignItems='center'
-  //       color={mainText}>
-  //       <HorizonLogo h='26px' w='175px' my='32px' color={logoColor} />
-  //     </Link>
-  //   );
-    // mainText = useColorModeValue("gray.700", "gray.200");
-    // navbarBg = useColorModeValue("white", "navy.800");
-    // navbarShadow = useColorModeValue(
-    //   "0px 7px 23px rgba(0, 0, 0, 0.05)",
-    //   "none"
-    // );
-    // bgButton = useColorModeValue("gray.700", "white");
-    // colorButton = useColorModeValue("white", "gray.700");
-    // navbarPosition = "fixed";
   }
   const createNftsLinks = (routes) => {
     return routes.map((link, key) => {
@@ -328,32 +301,6 @@ export default function AuthNavbar(props) {
               <SimpleGrid columns='3' gap='10px' minW='500px' me='20px'>
                 {createAuthLinks(authObject)}
               </SimpleGrid>
-              {/* <Flex
-                bg='red'
-                direction='column'
-                justify='center'
-                align='center'
-                w='stretch'
-                minH='230px'
-                borderRadius='15px'>
-                <IconBox
-                  bg='white'
-                  color='white'
-                  borderRadius='50%'
-                  h='50px'
-                  w='50px'
-                  mb='12px'>
-                  <Icon as={AiFillStar} w='25px' h='25px' color='blue.500' />
-                </IconBox>
-                <Text
-                  fontSize='xl'
-                  fontWeight='bold'
-                  color='#fff'
-                  maxW='80%'
-                  textAlign='center'>
-                  Explore our utilities pages
-                </Text>
-              </Flex> */}
             </Flex>
           </MenuList>
         </Menu>
@@ -502,8 +449,3 @@ export default function AuthNavbar(props) {
       </Flex>
     </SidebarContext.Provider>
   );
-
-AuthNavbar.propTypes = {
-  color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"]),
-  brandText: PropTypes.string,
-};

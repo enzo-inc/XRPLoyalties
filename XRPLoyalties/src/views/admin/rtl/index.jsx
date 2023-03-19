@@ -138,30 +138,9 @@ export default function UserReports() {
     setAddress(event.target.value);
   }
 
-
-
-
-
   const handleSubmit = async (event) => {
-
-    // const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233")
-    // await client.connect()
-    // transactionBlob = {
-    //   "TransactionType" : "Payment",
-    //   "Account" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
-    //   "Destination" : address,
-    //   "Amount" : {
-    //      "currency" : currency,
-    //      "value" : amount,
-    //      "issuer" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
-    //   },
-    //   "Fee": "12",
-    //   "Flags": 2147483648,
-    //   "Sequence": 2,
-    // }
     
     console.log("Submitted values: ", amount, currency, song);
-    // client.disconnect()
   };
 
   // Chakra Color Mode
@@ -254,29 +233,6 @@ export default function UserReports() {
         />
         <MiniCalendar h='90%' w='80%' minW='80%' selectRange={false} />
 
-      {/* <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-          <DailyTraffic />
-          <PieCard />
-        </SimpleGrid>
-      </SimpleGrid> */}
-
-      {/* <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-        <TotalSpent />
-        <WeeklyRevenue />
-      </SimpleGrid> */}
-
-      {/* <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
-        />
-      //   <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-      //     <Tasks />
-      //     <MiniCalendar h='100%' minW='100%' selectRange={false} />
-      //   </SimpleGrid>
-      // </SimpleGrid> */}
 
       <Box  align='center'  mb='10px'>
         
