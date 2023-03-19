@@ -8,13 +8,13 @@ Artist royalties distribution service built on XRPL using the [MPEG-21](https://
 ![XRPLoyalties Architecture.png](screenshots%2FXRPLoyalties%20Architecture.png)
 
 We use Ripple's blockchain for:
-- To settle cross-border payments from several Performing Righths Organizations
+- To settle cross-border payments from several Performing Rights Organizations
 - Escrow accounts to hold the funds until the royalties are claimed by the right holders
 
-We use the EVM sidechain for:
-- To deploy IPEntity smart contract to store the IP Entities of each NFT. This smart contract translates the [MPEG-21 Media Contract Ontology (MCO)](https://www.semanticscholar.org/paper/Overview-of-the-MPEG-21-Media-Contract-Ontology-Rodr%C3%ADguez-Doncel-Delgado/9d0de4c4818b893f3b8eeffaa540a799c640241a), a part of the standard ISO/IEC 21000, into a smart contract.
+We use Ripple's EVM sidechain for:
+- To deploy MCO smart contract to store the IP Entities of each NFT. This smart contract translates the [MPEG-21 Media Contract Ontology (MCO)](https://www.semanticscholar.org/paper/Overview-of-the-MPEG-21-Media-Contract-Ontology-Rodr%C3%ADguez-Doncel-Delgado/9d0de4c4818b893f3b8eeffaa540a799c640241a), a part of the standard ISO/IEC 21000, into a smart contract.
 - To mint NFTs for each IP Entity
-- The IP Entity metadata for each NFT is generated using the [MPEG-21 Media Contract Ontology (MCO)](https://www.semanticscholar.org/paper/Overview-of-the-MPEG-21-Media-Contract-Ontology-Rodr%C3%ADguez-Doncel-Delgado/9d0de4c4818b893f3b8eeffaa540a799c640241a), a part of the standard ISO/IEC 21000.
+- The MCO Smart Contract's metadata for each NFT is generated using the [MPEG-21 Media Contract Ontology (MCO)](https://www.semanticscholar.org/paper/Overview-of-the-MPEG-21-Media-Contract-Ontology-Rodr%C3%ADguez-Doncel-Delgado/9d0de4c4818b893f3b8eeffaa540a799c640241a), a part of the standard ISO/IEC 21000.
 
 # Metadata
 The metadata is generated using the [MPEG-21 Digital Item Declaration Language (DIDL)](https://mpeg.chiariglione.org/standards/mpeg-21/digital-item-declaration) standard using its [XML schema definition](https://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-21_schema_files/did/). The metadata is stored in IPFS and used for minting the IP Entity of each NFT.
