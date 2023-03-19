@@ -27,7 +27,7 @@ import { HorizonLogo } from "components/icons/Icons";
 import { SidebarResponsive } from "components/sidebar/Sidebar";
 import { SidebarContext } from "contexts/SidebarContext";
 import Logo from "components/icons/logo.png";
-
+import Flag from "../views/auth/signIn/index.jsx"
 
 // Assets
 import { GoChevronDown, GoChevronRight } from "react-icons/go";
@@ -59,6 +59,8 @@ export default function AuthNavbar(props) {
   } = useDisclosure();
   // Menus
   function getLinks(routeName) {
+    console.log("AAAAAAAAAAaaa")
+
     let foundRoute = routes.filter(function (route) {
       return route.items && route.name === routeName;
     });

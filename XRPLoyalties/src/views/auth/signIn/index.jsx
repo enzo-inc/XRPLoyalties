@@ -20,7 +20,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-
+import { useState } from "react";
 import React from "react";
 import { NavLink, Link, useHistory } from "react-router-dom";
 // Chakra imports
@@ -55,15 +55,24 @@ import { isConnected, getAddress, getNetwork, getPublicKey } from "@gemwallet/ap
 function SignIn() {
 
   // Gem Wallet
-  const connect = async () => {
+  const [flag, setCount] = useState(0);
+
+
+  const connect = async (fl) => {
     const hasWallet = await isConnected();
     if (hasWallet) {
       const responsePublicKey = await getPublicKey();
       if (responsePublicKey) {
         const { address, publicKey } = responsePublicKey;
+        // console.log(fl)
+        if (fl == 0){
+          window.open("/rtl/rtl-default#/rtl/rtl-default", "_self");
+        }else{
+          window.open("/admin/default", "_self");
+        }
+
         // pbk = publicKey;
         // document.getElementById("address").textContent = address;
-        window.open("/admin/default", "_self");
       }
     } else {
       alert(
@@ -71,6 +80,12 @@ function SignIn() {
       );
     }
   };
+
+  const handleCountClick = () => {
+    setCount(flag + 1);
+    connect(flag)
+  };
+
 
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
@@ -228,6 +243,7 @@ function SignIn() {
             {/* </Flex>
 
           </FormControl> */}
+          {/* <NavLink to="/admin/profile"></NavLink> */}
           <Button
           
               fontSize='sm'
@@ -235,7 +251,9 @@ function SignIn() {
               fontWeight='500'
               w='100%'
               h='50'
-              mb='24px'>
+              mb='24px'
+              onClick={handleCountClick}
+              >
               <img src={GemWalletIcon} style={{width: '10%', height: '80%', display: 'block', margin: '10px'}}/>
               Sign In as a Royalty collector
             </Button>
