@@ -35,7 +35,8 @@ def deploy(mcoCont):
     owner = get_account()
 
     # owner = accounts[0]
-    alice = accounts[1]
+    # Set the owner of the NFT contract on Ripple EVM sidechain
+    alice = "0x6CE64fd11f85EFaA4c02993412e62fe7641603D0"
 
     partiesAcc = list(accounts[2:2 + len(mcoCont['parties'])])
 
@@ -81,12 +82,22 @@ def deploy(mcoCont):
         accounts[6],
     ]
 
+    # Not accounted for in the incomeBeneficiariesList:
+    # StreamingService = 10%
+    # incomePercentagesList = [
+    #     Web3.toBytes(2),  # 2%
+    #     Web3.toBytes(1),  # 1%
+    #     Web3.toBytes(50),  # 50%
+    #     Web3.toBytes(1),  # 1%
+    #     Web3.toBytes(20),  # 20%
+    # ]
+
     incomePercentagesList = [
-        Web3.toBytes(2),  # 2%
-        Web3.toBytes(1),  # 1%
-        Web3.toBytes(50),  # 50%
-        Web3.toBytes(1),  # 1%
-        Web3.toBytes(20),  # 20%
+        30,  # 30%
+        5,  # 5%
+        50,  # 50%
+        5,  # 5%
+        10,  # 10%
     ]
 
     # The content URI is a string of the contract metadata
@@ -116,8 +127,8 @@ def deploy(mcoCont):
     print("Contract address:", contract_address)
 
     # a = cont.getDeonticExpressions()
-    b = contract_deployed.getIncomePercentagesBy(accounts[2])
-    print(b)
+    # b = contract_deployed.getIncomePercentagesBy(accounts[2])
+    # print(b)
 
     return contract_deployed
 
