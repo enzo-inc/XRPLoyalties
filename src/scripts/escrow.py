@@ -32,7 +32,13 @@ def calc_release_or_cancel_time():
     return cancel_after
 
 
-def create_escrow(ripple_websocket, secret, condition, cancel_after):
+def create_escrow(ripple_websocket,
+                  secret,
+                  condition,
+                  cancel_after,
+                  PerformingRighthsOrganisation_account,
+                  beneficiary,
+                  incomeBeneficiary):
     # Set up the request object
 
     # Amount set in XRP drops, where 1 XRP = 1,000,000 drops.
@@ -42,10 +48,10 @@ def create_escrow(ripple_websocket, secret, condition, cancel_after):
         "command": "submit",
         "secret": secret,
         "tx_json": {
-            "Account": "r4iTMtAQG8M89Apq5sf81GFhxwWKxPJFDD",
+            "Account": PerformingRighthsOrganisation_account,
             "TransactionType": "EscrowCreate",
-            "Amount": "10000000",  # 10 XRP
-            "Destination": "rfJHgwD9mrkKSYmhyv2vLMMDWgskQY77bs",
+            "Amount": str(incomeBeneficiary),  # 10 XRP
+            "Destination": beneficiary,
             "Condition": condition,
             "CancelAfter": cancel_after
         }
@@ -96,16 +102,16 @@ def confirm_transaction(ripple_websocket, transaction):
     return response
 
 
-def escrow_finish(ripple_websocket, secret, fulfillment_secret, condition, fulfillment, sequence):
+def escrow_finish(ripple_websocket, PerformingRighthsOrganisation_account, secret, condition, fulfillment, sequence):
     # Set up the request object
     request = {
         "id": 1,
         "command": "submit",
         "secret": secret,
         "tx_json": {
-            "Account": "r4iTMtAQG8M89Apq5sf81GFhxwWKxPJFDD",
+            "Account": PerformingRighthsOrganisation_account,
             "TransactionType": "EscrowFinish",
-            "Owner": "r4iTMtAQG8M89Apq5sf81GFhxwWKxPJFDD",
+            "Owner": PerformingRighthsOrganisation_account,
             "OfferSequence": int(sequence),
             "Condition": condition,
             "Fulfillment": fulfillment,
@@ -143,35 +149,81 @@ def main():
     ripple_test_websocket = "wss://s.altnet.rippletest.net:51233/"
     rippled_dev_websocket = "wss://s.devnet.rippletest.net:51233/"
 
-    cancel_after = calc_release_or_cancel_time()
-    fulfillment_secret, condition, fulfillment = gen_condition_and_fulfillment()
+    with open('./metadata/bindings.json') as f:
+        accounts = json.load(f)
 
-    print("Going to create the escrow")
-    resp_escrow_create = create_escrow(rippled_dev_websocket, secret, condition, cancel_after)
-    resp_escrow_create = json.loads(resp_escrow_create)
-    txt_identity_hash = resp_escrow_create["result"]["tx_json"]["hash"]
-    sequence = resp_escrow_create["result"]["tx_json"]["Sequence"]
-    # txt_identity_hash = "AC0770DEF306E773E350CC3567761D4A33FDA71A0F38BAFC97DC9230E4297CA8"
+    # Convert accounts to tuple
+    accounts = tuple(accounts.values())
+    PerformingRighthsOrganisation_account = "r4iTMtAQG8M89Apq5sf81GFhxwWKxPJFDD"
 
-    print("Waiting for the transaction to be confirmed...")
-    # time.sleep(5)
-    resp_confirm = confirm_transaction(rippled_dev_websocket, txt_identity_hash)
+    # Amount set in XRP drops, where 1 XRP = 1,000,000 drops.
+    amount_to_distribute = "100"  # 100 XRP
+    conversion_factor = 1000000
 
-    print("Going to finish the escrow")
-    # condition = "A0258020B1D9EFFC90CF9D6AC489643098DA99CDCDC00F9495080F80DD02E68C45AF7658810120"
-    # fulfillment_secret = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
-    # fulfillment = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
-    # sequence = 26995994
-    resp_escrow_finish = escrow_finish(rippled_dev_websocket, secret, fulfillment_secret, condition, fulfillment, sequence)
+    Beneficiaries = {
+        accounts[2]: 0.3,
+        accounts[4]: 0.05,
+        accounts[5]: 0.5,
+        accounts[3]: 0.05,
+        accounts[6]: 0.1,
+    }
 
-    print("Waiting for the transaction to be confirmed...")
-    # time.sleep(5)
-    resp_escrow_finish = json.loads(resp_escrow_finish)
-    if resp_escrow_finish["status"] == "success":
-        txt_identity_hash = resp_escrow_finish["result"]["tx_json"]["hash"]
+    escrowBeneficiaries = {}
+
+    for beneficiary, percentage in Beneficiaries.items():
+        incomeBeneficiary = int(int(amount_to_distribute) * conversion_factor * percentage)
+
+        cancel_after = calc_release_or_cancel_time()
+        fulfillment_secret, condition, fulfillment = gen_condition_and_fulfillment()
+
+        print(f"Going to create the escrow for {beneficiary} with {incomeBeneficiary} XRP")
+        resp_escrow_create = create_escrow(rippled_dev_websocket,
+                                           secret,
+                                           condition,
+                                           cancel_after,
+                                           PerformingRighthsOrganisation_account,
+                                           beneficiary,
+                                           incomeBeneficiary)
+
+        resp_escrow_create = json.loads(resp_escrow_create)
+        txt_identity_hash = resp_escrow_create["result"]["tx_json"]["hash"]
+        sequence = resp_escrow_create["result"]["tx_json"]["Sequence"]
+        # txt_identity_hash = "AC0770DEF306E773E350CC3567761D4A33FDA71A0F38BAFC97DC9230E4297CA8"
+
+        print("Waiting for the transaction to be confirmed...")
+        # time.sleep(5)
         resp_confirm = confirm_transaction(rippled_dev_websocket, txt_identity_hash)
 
-        print("Done!")
+        # Save the escrow information needed to finish the escrow later
+        escrowBeneficiaries[beneficiary] = {
+            "condition": condition,
+            "fulfillment": fulfillment,
+            "sequence": sequence
+        }
+
+    print("Going to finish the escrows")
+
+    for beneficiary, escrow_info in escrowBeneficiaries.items():
+
+        # condition = "A0258020B1D9EFFC90CF9D6AC489643098DA99CDCDC00F9495080F80DD02E68C45AF7658810120"
+        # fulfillment_secret = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
+        # fulfillment = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
+        # sequence = 26995994
+        resp_escrow_finish = escrow_finish(rippled_dev_websocket,
+                                           PerformingRighthsOrganisation_account,
+                                           secret,
+                                           escrow_info["condition"],
+                                           escrow_info["fulfillment"],
+                                           escrow_info["sequence"])
+
+        print("Waiting for the transaction to be confirmed...")
+        # time.sleep(5)
+        resp_escrow_finish = json.loads(resp_escrow_finish)
+        if resp_escrow_finish["status"] == "success":
+            txt_identity_hash = resp_escrow_finish["result"]["tx_json"]["hash"]
+            resp_confirm = confirm_transaction(rippled_dev_websocket, txt_identity_hash)
+
+            print("Done!")
 
 
 if __name__ == "__main__":
