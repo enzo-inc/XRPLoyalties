@@ -20,9 +20,9 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-
+import { useState } from "react";
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useHistory } from "react-router-dom";
 // Chakra imports
 import {
   Box,
@@ -44,12 +44,49 @@ import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/auth/Default";
 // Assets
 import illustration from "assets/img/auth/auth.png";
+import XRPLBanner from "components/icons/XRPLoyalties - Banner-cut.png";
 import { FcGoogle } from "react-icons/fc";
 import GemWalletIcon from "components/icons/gem1.png";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
+import { isConnected, getAddress, getNetwork, getPublicKey } from "@gemwallet/api";
+
 
 function SignIn() {
+
+  // Gem Wallet
+  const [flag, setCount] = useState(0);
+
+
+  const connect = async (fl) => {
+    const hasWallet = await isConnected();
+    if (hasWallet) {
+      const responsePublicKey = await getPublicKey();
+      if (responsePublicKey) {
+        const { address, publicKey } = responsePublicKey;
+        // console.log(fl)
+        if (fl == 0){
+          window.open("/rtl/rtl-default#/rtl/rtl-default", "_self");
+        }else{
+          window.open("/admin/default", "_self");
+        }
+
+        // pbk = publicKey;
+        // document.getElementById("address").textContent = address;
+      }
+    } else {
+      alert(
+        "User doesn't have GemWallet! Please install it: https://gemwallet.app"
+      );
+    }
+  };
+
+  const handleCountClick = () => {
+    setCount(flag + 1);
+    connect(flag)
+  };
+
+
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
@@ -71,14 +108,14 @@ function SignIn() {
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
-        maxW={{ base: "100%", md: "max-content" }}
+        maxW={{ base: "100%"}}
         w='100%'
         mx={{ base: "auto", lg: "0px" }}
         me='auto'
         h='100%'
         alignItems='start'
         justifyContent='center'
-        mb={{ base: "30px", md: "60px" }}
+        mb={{ base: "70px", md: "100px" }}
         px={{ base: "25px", md: "0px" }}
         mt={{ base: "40px", md: "14vh" }}
         flexDirection='column'>
@@ -117,7 +154,8 @@ function SignIn() {
             fontWeight='500'
             _hover={googleHover}
             _active={googleActive}
-            _focus={googleActive}>
+            _focus={googleActive}
+            onClick={connect}>
             <img src={GemWalletIcon} style={{width: '10%', height: '190%', display: 'block', margin: '10px'}}/>
             {/* <Icon as={GemWalletIcon} w='40px' h='40px' me='20px' /> */}
             Sign In as an artist
@@ -205,6 +243,7 @@ function SignIn() {
             {/* </Flex>
 
           </FormControl> */}
+          {/* <NavLink to="/admin/profile"></NavLink> */}
           <Button
           
               fontSize='sm'
@@ -212,7 +251,9 @@ function SignIn() {
               fontWeight='500'
               w='100%'
               h='50'
-              mb='24px'>
+              mb='24px'
+              onClick={handleCountClick}
+              >
               <img src={GemWalletIcon} style={{width: '10%', height: '80%', display: 'block', margin: '10px'}}/>
               Sign In as a Royalty collector
             </Button>

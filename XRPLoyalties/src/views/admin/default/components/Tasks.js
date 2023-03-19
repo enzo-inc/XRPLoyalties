@@ -35,9 +35,9 @@ export default function Conversion(props) {
         />
 
         <Text color={textColor} fontSize='lg' fontWeight='700'>
-          Tasks
+          Distribute Royalties
         </Text>
-        <Menu ms='auto' />
+        {/* <Menu ms='auto' /> */}
       </Flex>
       <Box px='11px'>
         <Flex mb='20px'>
@@ -47,15 +47,15 @@ export default function Conversion(props) {
             color={textColor}
             fontSize='md'
             textAlign='start'>
-            Landing Page Design
+            Royalties to Aria Vetrunko
           </Text>
-          <Icon
+          {/* <Icon
             ms='auto'
             as={MdDragIndicator}
             color='secondaryGray.600'
             w='24px'
             h='24px'
-          />
+          /> */}
         </Flex>
         <Flex mb='20px'>
           <Checkbox me='16px' defaultChecked colorScheme='brandScheme' />
@@ -64,15 +64,15 @@ export default function Conversion(props) {
             color={textColor}
             fontSize='md'
             textAlign='start'>
-            Dashboard Builder
+            Royalties to Leo Harizo
           </Text>
-          <Icon
+          {/* <Icon
             ms='auto'
             as={MdDragIndicator}
             color='secondaryGray.600'
             w='24px'
             h='24px'
-          />
+          /> */}
         </Flex>
         <Flex mb='20px'>
           <Checkbox defaultChecked me='16px' colorScheme='brandScheme' />
@@ -81,15 +81,15 @@ export default function Conversion(props) {
             color={textColor}
             fontSize='md'
             textAlign='start'>
-            Mobile App Design
+            Royalties to Dom Bom
           </Text>
-          <Icon
+          {/* <Icon
             ms='auto'
             as={MdDragIndicator}
             color='secondaryGray.600'
             w='24px'
             h='24px'
-          />
+          /> */}
         </Flex>
         <Flex mb='20px'>
           <Checkbox me='16px' colorScheme='brandScheme' />
@@ -98,17 +98,17 @@ export default function Conversion(props) {
             color={textColor}
             fontSize='md'
             textAlign='start'>
-            Illustrations
+            Royalties to Karina Enzo
           </Text>
-          <Icon
+          {/* <Icon
             ms='auto'
             as={MdDragIndicator}
             color='secondaryGray.600'
             w='24px'
             h='24px'
-          />
+          /> */}
         </Flex>
-        <Flex mb='20px'>
+        {/* <Flex mb='20px'>
           <Checkbox defaultChecked me='16px' colorScheme='brandScheme' />
           <Text
             fontWeight='bold'
@@ -123,8 +123,8 @@ export default function Conversion(props) {
             color='secondaryGray.600'
             w='24px'
             h='24px'
-          />
-        </Flex>
+          /> */}
+        {/* </Flex> */}
       </Box>
     </Card>
   );

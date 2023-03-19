@@ -5,8 +5,10 @@ import {
   MdBarChart,
   MdPerson,
   MdHome,
+  MdPeople,
   MdLock,
   MdOutlineShoppingCart,
+  MdAudiotrack
 } from "react-icons/md";
 
 // Admin Imports
@@ -28,12 +30,12 @@ const routes = [
     component: MainDashboard,
   },
   {
-    name: "Your songs/ Community",
+    name: "Your songs / Community",
     layout: "/admin",
     path: "/nft-marketplace",
     icon: (
       <Icon
-        as={MdOutlineShoppingCart}
+        as={MdAudiotrack}
         width='20px'
         height='20px'
         color='inherit'
@@ -42,13 +44,13 @@ const routes = [
     component: NFTMarketplace,
     secondary: true,
   },
-  {
-    name: "Data Tables",
-    layout: "/admin",
-    icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
-    path: "/data-tables",
-    component: DataTables,
-  },
+  // {
+  //   name: "Data Tables",
+  //   layout: "/admin",
+  //   icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
+  //   path: "/data-tables",
+  //   component: DataTables,
+  // },
   {
     name: "Your Profile",
     layout: "/admin",
@@ -64,10 +66,10 @@ const routes = [
     component: SignInCentered,
   },
   {
-    name: "RTL Admin",
+    name: "Royalty Collector",
     layout: "/rtl",
     path: "/rtl-default",
-    icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdPeople} width='20px' height='20px' color='inherit' />,
     component: RTL,
   },
 ];
