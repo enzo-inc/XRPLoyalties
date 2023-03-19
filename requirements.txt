@@ -1,0 +1,4 @@
+eth-brownie==1.19.3
+cryptoconditions==0.8.1
+base58==2.1.1
+websocket-client==1.5.1

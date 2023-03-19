@@ -63,6 +63,7 @@ contract IPEntity is ERC721, Ownable, PaymentSplitter {
     }
 
     // *** Minter functions ***
+    // MCO = Media Contract Ontology (MCO) is a standard for describing media contracts
     function newMCOContract(bytes memory contractId, address[] memory parties)
         public
     {
