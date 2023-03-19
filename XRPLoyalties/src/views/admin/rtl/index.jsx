@@ -142,7 +142,10 @@ export default function UserReports() {
 
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+
+    const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233")
+    await client.connect()
     // transactionBlob = {
     //   "TransactionType" : "Payment",
     //   "Account" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
@@ -158,6 +161,7 @@ export default function UserReports() {
     // }
     
     console.log("Submitted values: ", amount, currency, song);
+    client.disconnect()
   };
 
   // Chakra Color Mode
