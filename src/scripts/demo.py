@@ -139,6 +139,135 @@ def escrow_finish(ripple_websocket, PerformingRighthsOrganisation_account, secre
     return response
 
 
+def get_beneficiaries_and_percentages(MCO_Contract, amount_to_distribute, owner):
+    """
+    Get the beneficiaries and their percentages from the Intellectual Property's smart contract
+    :param MCO_Contract:
+    :param amount_to_distribute:
+    :param owner:
+    :return:
+    """
+
+    print(f"Interacting with Intellectual Property's smart contract: {MCO_Contract.address}")
+    beneficiaryAddresses = MCO_Contract.getIncomeBeneficiaries({'from': owner})
+    Beneficiaries = {}
+    print(f"Addresses of beneficiaries of the royalties {beneficiaryAddresses}")
+
+    for beneficiary in beneficiaryAddresses:
+        beneficiaryPercentage = MCO_Contract.getIncomePercentage(beneficiary, {'from': owner}) / 100
+        print(f"Percentage of {beneficiary} is {beneficiaryPercentage}")
+        Beneficiaries[beneficiary] = beneficiaryPercentage
+
+    print(f"Updating the Intellectual Property's smart contract with amount of {amount_to_distribute} XRP collected "
+          f"by Performing Righths Organisation")
+
+    # Post the income received from PerformingRighthsOrganisation for a song to the Song's smart contract
+    MCO_Contract.updateIncomeOwned(int(amount_to_distribute), {'from': owner, "gasLimit": 2588199})
+    print(f"Income received from PerformingRighthsOrganisation for {amount_to_distribute} XRP")
+
+    for beneficiary in beneficiaryAddresses:
+        beneficiaryIncome = MCO_Contract.getIncomeOwned(beneficiary, {'from': owner})
+        print(f"Income owned to {beneficiary} is {beneficiaryIncome}")
+
+    return Beneficiaries
+
+
+def create_escrows(Beneficiaries, PerformingRighthsOrganisation_account, amount_to_distribute, conversion_factor,
+                   rippled_dev_websocket, secret):
+    """
+    Create escrows for each beneficiary from the PerformingRighthsOrganisation_account
+    :param Beneficiaries:
+    :param PerformingRighthsOrganisation_account:
+    :param amount_to_distribute:
+    :param conversion_factor:
+    :param rippled_dev_websocket:
+    :param secret:
+    :return:
+    """
+    escrowBeneficiaries = {}
+
+    for beneficiary, percentage in Beneficiaries.items():
+        incomeBeneficiary = int(int(amount_to_distribute) * conversion_factor * percentage)
+
+        cancel_after = calc_release_or_cancel_time()
+        fulfillment_secret, condition, fulfillment = gen_condition_and_fulfillment()
+
+        print(f"Going to create the escrow for {beneficiary} with {incomeBeneficiary} XRP")
+        resp_escrow_create = create_escrow(rippled_dev_websocket,
+                                           secret,
+                                           condition,
+                                           cancel_after,
+                                           PerformingRighthsOrganisation_account,
+                                           beneficiary,
+                                           incomeBeneficiary)
+
+        resp_escrow_create = json.loads(resp_escrow_create)
+        txt_identity_hash = resp_escrow_create["result"]["tx_json"]["hash"]
+        sequence = resp_escrow_create["result"]["tx_json"]["Sequence"]
+        # txt_identity_hash = "AC0770DEF306E773E350CC3567761D4A33FDA71A0F38BAFC97DC9230E4297CA8"
+
+        print("Waiting for the transaction to be confirmed...")
+        # time.sleep(5)
+        resp_confirm = confirm_transaction(rippled_dev_websocket, txt_identity_hash)
+
+        # Save the escrow information needed to finish the escrow later
+        escrowBeneficiaries[beneficiary] = {
+            "condition": condition,
+            "fulfillment": fulfillment,
+            "sequence": sequence,
+            "incomeBeneficiary": incomeBeneficiary
+        }
+    return escrowBeneficiaries
+
+
+def finish_escrows(MCO_Contract, PerformingRighthsOrganisation_account, escrowBeneficiaries, owner,
+                   rippled_dev_websocket, secret):
+    """
+    Finish the escrows for each beneficiary after the claim from the beneficiary or after cancel time has passed
+    :param MCO_Contract:
+    :param PerformingRighthsOrganisation_account:
+    :param escrowBeneficiaries:
+    :param owner:
+    :param rippled_dev_websocket:
+    :param secret:
+    :return:
+    """
+
+    print("Going to finish the escrows")
+    for beneficiary, escrow_info in escrowBeneficiaries.items():
+
+        # condition = "A0258020B1D9EFFC90CF9D6AC489643098DA99CDCDC00F9495080F80DD02E68C45AF7658810120"
+        # fulfillment_secret = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
+        # fulfillment = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
+        # sequence = 26995994
+        resp_escrow_finish = escrow_finish(rippled_dev_websocket,
+                                           PerformingRighthsOrganisation_account,
+                                           secret,
+                                           escrow_info["condition"],
+                                           escrow_info["fulfillment"],
+                                           escrow_info["sequence"])
+
+        print("Waiting for the transaction to be confirmed...")
+        # time.sleep(5)
+        resp_escrow_finish = json.loads(resp_escrow_finish)
+        if resp_escrow_finish["status"] == "success":
+            txt_identity_hash = resp_escrow_finish["result"]["tx_json"]["hash"]
+            resp_confirm = confirm_transaction(rippled_dev_websocket, txt_identity_hash)
+
+            # Update the balance of the income owned to the beneficiary after the escrow is finished
+            # and the funds have been released to the beneficiary
+            print(f"Update the balance of income owned to {beneficiary} after the escrow is finished")
+            MCO_Contract.reduceIncomeOwned(beneficiary,
+                                           int(escrow_info['incomeBeneficiary']),
+                                           {'from': owner, "gasLimit": 2588199})
+
+            # Get the balance of the income owned to the beneficiary after the escrow is finished
+            # and the funds have been released to the beneficiary
+            time.sleep(5)  # Wait for the transaction to be confirmed
+            beneficiaryIncome = MCO_Contract.getIncomeOwned(beneficiary, {'from': owner})
+            print(f"Balance of income owned to {beneficiary} is {beneficiaryIncome}")
+
+
 def main():
     load_dotenv()
 
@@ -168,26 +297,7 @@ def main():
     # Interact with latest deployed contracts
     MCO_Contract = MCOContract[-1]
 
-    print(f"Interacting with Intellectual Property's smart contract: {MCO_Contract.address}")
-    beneficiaryAddresses = MCO_Contract.getIncomeBeneficiaries({'from': owner})
-    Beneficiaries = {}
-    print(f"Addresses of beneficiaries of the royalties {beneficiaryAddresses}")
-
-    for beneficiary in beneficiaryAddresses:
-        beneficiaryPercentage = MCO_Contract.getIncomePercentage(beneficiary, {'from': owner}) / 100
-        print(f"Percentage of {beneficiary} is {beneficiaryPercentage}")
-        Beneficiaries[beneficiary] = beneficiaryPercentage
-
-    print(f"Updating the Intellectual Property's smart contract with amount of {amount_to_distribute} XRP collected by Performing Righths Organisation")
-    # Update the amount to be paid to the parties
-    MCO_Contract.updateIncomeOwned(int(amount_to_distribute), {'from': owner, "gasLimit": 2588199})
-    print("Income received from PerformingRighthsOrganisation for 100 XRP")
-
-    for beneficiary in beneficiaryAddresses:
-
-        beneficiaryIncome = MCO_Contract.getIncomeOwned(beneficiary, {'from': owner})
-        print(f"Income owned to {beneficiary} is {beneficiaryIncome}")
-
+    Beneficiaries = get_beneficiaries_and_percentages(MCO_Contract, amount_to_distribute, owner)
 
     # Beneficiaries = {
     #     accounts[2]: 0.3,
@@ -197,61 +307,11 @@ def main():
     #     accounts[6]: 0.1,
     # }
 
-    escrowBeneficiaries = {}
-    for beneficiary, percentage in Beneficiaries.items():
-        incomeBeneficiary = int(int(amount_to_distribute) * conversion_factor * percentage)
+    escrowBeneficiaries = create_escrows(Beneficiaries, PerformingRighthsOrganisation_account, amount_to_distribute,
+                                         conversion_factor, rippled_dev_websocket, secret)
 
-        cancel_after = calc_release_or_cancel_time()
-        fulfillment_secret, condition, fulfillment = gen_condition_and_fulfillment()
-
-        print(f"Going to create the escrow for {beneficiary} with {incomeBeneficiary} XRP")
-        resp_escrow_create = create_escrow(rippled_dev_websocket,
-                                           secret,
-                                           condition,
-                                           cancel_after,
-                                           PerformingRighthsOrganisation_account,
-                                           beneficiary,
-                                           incomeBeneficiary)
-
-        resp_escrow_create = json.loads(resp_escrow_create)
-        txt_identity_hash = resp_escrow_create["result"]["tx_json"]["hash"]
-        sequence = resp_escrow_create["result"]["tx_json"]["Sequence"]
-        # txt_identity_hash = "AC0770DEF306E773E350CC3567761D4A33FDA71A0F38BAFC97DC9230E4297CA8"
-
-        print("Waiting for the transaction to be confirmed...")
-        # time.sleep(5)
-        resp_confirm = confirm_transaction(rippled_dev_websocket, txt_identity_hash)
-
-        # Save the escrow information needed to finish the escrow later
-        escrowBeneficiaries[beneficiary] = {
-            "condition": condition,
-            "fulfillment": fulfillment,
-            "sequence": sequence
-        }
-
-    print("Going to finish the escrows")
-
-    for beneficiary, escrow_info in escrowBeneficiaries.items():
-
-        # condition = "A0258020B1D9EFFC90CF9D6AC489643098DA99CDCDC00F9495080F80DD02E68C45AF7658810120"
-        # fulfillment_secret = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
-        # fulfillment = "A02280206BB689AD3CA99F30632140FC2FC87C55B988563772A13DA2743E5FBA40531BCD"
-        # sequence = 26995994
-        resp_escrow_finish = escrow_finish(rippled_dev_websocket,
-                                           PerformingRighthsOrganisation_account,
-                                           secret,
-                                           escrow_info["condition"],
-                                           escrow_info["fulfillment"],
-                                           escrow_info["sequence"])
-
-        print("Waiting for the transaction to be confirmed...")
-        # time.sleep(5)
-        resp_escrow_finish = json.loads(resp_escrow_finish)
-        if resp_escrow_finish["status"] == "success":
-            txt_identity_hash = resp_escrow_finish["result"]["tx_json"]["hash"]
-            resp_confirm = confirm_transaction(rippled_dev_websocket, txt_identity_hash)
-
-            print("Done!")
+    finish_escrows(MCO_Contract, PerformingRighthsOrganisation_account, escrowBeneficiaries, owner,
+                   rippled_dev_websocket, secret)
 
 
 if __name__ == "__main__":

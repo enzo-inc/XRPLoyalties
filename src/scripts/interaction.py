@@ -32,13 +32,13 @@ def main():
     income = MCO_Contract.getIncomeOwned(accounts[5], {'from': owner})
     print("Income owned to party:", income)
 
-    # Update the amount to be paid to the parties
-    MCO_Contract.updateIncomeOwned(100, {'from': owner, "gasLimit": 2588199})
-    print("Income received from PerformingRighthsOrganisation for 100 XRP")
+    # # Update the amount to be paid to the parties
+    # MCO_Contract.updateIncomeOwned(100, {'from': owner, "gasLimit": 2588199})
+    # print("Income received from PerformingRighthsOrganisation for 100 XRP")
 
-    # Get the income owned to a party
-    income = MCO_Contract.getIncomeOwned(accounts[5], {'from': owner})
-    print("Income owned to party:", income)
+    # # Get the income owned to a party
+    # income = MCO_Contract.getIncomeOwned(accounts[5], {'from': owner})
+    # print("Income owned to party:", income)
 
     # Reduce the income owned to a party
     MCO_Contract.reduceIncomeOwned(accounts[5], 50, {'from': owner, "gasLimit": 2588199})
@@ -51,9 +51,9 @@ def main():
     # income = MCO_Contract.getIncomeOwned(accounts[3], {'from': owner})
     # print("Income owned to party:", income)
 
-    # Get all the parties of the contract
-    parties = MCO_Contract.getParties({'from': owner})
-    print("Parties of the contract:", parties)
+    # # Get all the parties of the contract
+    # parties = MCO_Contract.getParties({'from': owner})
+    # print("Parties of the contract:", parties)
 
     # # Get the Contract Relations
     # relations = MCO_Contract.getContractRelations()
