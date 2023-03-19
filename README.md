@@ -32,6 +32,22 @@ The metadata is generated using the [MPEG-21 Digital Item Declaration Language (
 # Royalties
 The [MPEG-21 Media Contract Ontology (MCO)](https://www.semanticscholar.org/paper/Overview-of-the-MPEG-21-Media-Contract-Ontology-Rodr%C3%ADguez-Doncel-Delgado/9d0de4c4818b893f3b8eeffaa540a799c640241a), a part of the standard ISO/IEC 21000, "is an ontology to represent contracts dealing with rights on multimedia assets and intellectual property protected content in general" from the work of _[Kudumakis, Panos, Thomas Wilmering, Mark B. Sandler, Víctor Rodríguez-Doncel, Laurent, Boch and Jaime Delgado. “MPEG Intellectual Property Rights Ontologies.” (2019)](https://www.semanticscholar.org/paper/MPEG-Intellectual-Property-Rights-Ontologies-Kudumakis-Wilmering/020b0b333015859657d91739087cd874a9edcda7)_ is used to define royalties distribution rules in the IPEntity smart contract.
 
+# Web App
+
+To run the web app there are only three easy steps:
+
+    1. In your terminal navigate to the "XRPLoyalties" directory and execute:
+    ```
+        npm install
+    ```
+    2. Then run:
+    ```
+        npm start
+    ```  
+    3. Enjoy using the App!
+
+Note: Currently not all functionalities are developed. The app will be fully connected to the backend logic and completely working in future development cycles.
+
 # References
 
 - [ISO/IEC 21000-23:2022 Information technology — Multimedia framework (MPEG-21) — Part 23: Smart Contracts for Media](https://www.iso.org/standard/82527.html)
