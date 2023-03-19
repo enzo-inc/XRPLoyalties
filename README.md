@@ -1,6 +1,8 @@
 # XRPLoyalties
 Artist royalties distribution service built on XRPL using the [MPEG-21](https://www.mpeg.org/standards/MPEG-21/21/) Media Contract Ontology (MCO) standard from the Moving Picture Experts Group (MPEG) to define royalties distribution rules in a smart contract.
 
+# Screenshot
+
 # Metadata
 The metadata is generated using the [MPEG-21 Digital Item Declaration Language (DIDL)](https://mpeg.chiariglione.org/standards/mpeg-21/digital-item-declaration) standard using its [XML schema definition](https://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-21_schema_files/did/). The metadata is stored in IPFS and used for minting the IP Entity of each NFT.
 
