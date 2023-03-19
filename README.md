@@ -1,4 +1,14 @@
 # XRPLoyalties
+
+
+# Problem
+Royalty distribution costs artist millions because the current processes are inaccurate and obscure. 
+
+# Solution
+A blockchain-based royalty distribution and tracking platform for artists and royalty collection societies. Artists can also manage their communities through NFTs to engage their audience more.
+
+# Screenshots
+
 ![dashboard.jpeg](screenshots%2Fdashboard.jpeg)
 ![community.jpeg](screenshots%2Fcommunity.jpeg)
 
