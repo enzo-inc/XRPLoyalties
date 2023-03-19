@@ -103,6 +103,11 @@ contract MCOContract is Ownable {
         return _parties;
     }
 
+    // @dev Returns all the income beneficiaries
+    function getIncomeBeneficiaries() public view returns (string[] memory) {
+        return _incomeBeneficiaries;
+    }
+
     function getDeonticExpressions() public view returns (uint256[] memory) {
         uint256[] memory deontics = new uint256[](_deonticExpressions.length());
         for (uint256 i = 0; i < _deonticExpressions.length(); i++) {
