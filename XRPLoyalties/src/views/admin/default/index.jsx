@@ -99,7 +99,7 @@ export default function UserReports() {
             />
           }
           name='Total earnings'
-          value='$10987.4'
+          value='$10,987.4'
         />
         <MiniStatistics
           endContent={
@@ -109,13 +109,16 @@ export default function UserReports() {
               </FormLabel>
               <Select
                 id='balance'
-                variant='mini'
+                variant='transparent'
                 mt='5px'
                 me='0px'
                 defaultValue='usd'>
                 <option value='usd'>USD</option>
                 <option value='eur'>EUR</option>
-                <option value='gba'>GBA</option>
+                <option value='gbp'>GBP</option>
+                <option value='usd'>JPY</option>
+                <option value='eur'>AUD</option>
+                <option value='gba'>CAD</option>
               </Select>
             </Flex>
           }

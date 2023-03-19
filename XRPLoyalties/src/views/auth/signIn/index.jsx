@@ -44,6 +44,7 @@ import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/auth/Default";
 // Assets
 import illustration from "assets/img/auth/auth.png";
+import XRPLBanner from "components/icons/XRPLoyalties - Banner-cut.png";
 import { FcGoogle } from "react-icons/fc";
 import GemWalletIcon from "components/icons/gem1.png";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -92,14 +93,14 @@ function SignIn() {
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
-        maxW={{ base: "100%", md: "max-content" }}
+        maxW={{ base: "100%"}}
         w='100%'
         mx={{ base: "auto", lg: "0px" }}
         me='auto'
         h='100%'
         alignItems='start'
         justifyContent='center'
-        mb={{ base: "30px", md: "60px" }}
+        mb={{ base: "70px", md: "100px" }}
         px={{ base: "25px", md: "0px" }}
         mt={{ base: "40px", md: "14vh" }}
         flexDirection='column'>

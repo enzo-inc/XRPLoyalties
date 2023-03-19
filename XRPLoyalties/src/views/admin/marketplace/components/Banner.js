@@ -46,10 +46,11 @@ export default function Banner() {
         fontWeight='500'
         mb='40px'
         lineHeight='28px'>
-        The top listeners will have the unique opportunity to attenf a social event with me, 
+        The top listeners will have the unique opportunity to attend a social event with me, 
         where we will talk, have fun and of course SING OUR FAVOURITE SONGS!
       </Text>
       <Flex align='center'>
+      <a href='https://open.spotify.com/'>
         <Button
           bg='white'
           color='black'
@@ -61,13 +62,12 @@ export default function Banner() {
           py='20px'
           px='27'
           me='38px'>
-          Discover now
-        </Button>
-        <Link>
-          <Text color='white' fontSize='sm' fontWeight='500'>
-            Watch video
+          
+          <Text color='Black' fontSize='sm' fontWeight='500'>
+          Listen now!
           </Text>
-        </Link>
+        </Button>
+        </a>
       </Flex>
     </Flex>
   );

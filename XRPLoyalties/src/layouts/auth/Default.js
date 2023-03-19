@@ -55,11 +55,12 @@ function AuthIllustration(props) {
         {children}
         <Box
           display={{ base: "none", md: "block" }}
-          h='100%'
+          h='80%'
           minH='100vh'
           w={{ lg: "50vw", "2xl": "44vw" }}
           position='absolute'
-          right='0px'>
+          right='0px'
+          bottom="55px">
           <Flex
             bg={`url(${illustrationBackground})`}
             justify='center'
@@ -69,7 +70,7 @@ function AuthIllustration(props) {
             bgSize='cover'
             bgPosition='50%'
             position='absolute'
-            borderBottomLeftRadius={{ lg: "120px", xl: "200px" }}></Flex>
+            borderBottomLeftRadius={{ lg: "100px", xl: "180px" }}></Flex>
         </Box>
         <Footer />
       </Flex>
