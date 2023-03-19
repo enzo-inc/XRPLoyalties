@@ -1,4 +1,5 @@
 // Chakra Imports
+import { NavLink } from 'react-router-dom';
 import {
 	Avatar,
 	Button,
@@ -39,6 +40,16 @@ export default function HeaderLinks(props) {
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
 	);
+
+	let applicationsObject = {};
+	routes.map((route) => {
+	  if (route.items) {
+		applicationsObject = route.items.find(
+		  (link) => link.name === "Profile"
+		);
+	  }
+	});
+
 	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
 	return (
 		<Flex
@@ -105,9 +116,9 @@ export default function HeaderLinks(props) {
 			</Menu>
 
 			<Menu>
-				<MenuButton p="0px">
+				{/* <MenuButton p="0px">
 					<Icon mt="6px" as={MdInfoOutline} color={navbarIcon} w="18px" h="18px" me="10px" />
-				</MenuButton>
+				</MenuButton> */}
 				<MenuList
 					boxShadow={shadow}
 					p="20px"
@@ -145,14 +156,14 @@ export default function HeaderLinks(props) {
 				</MenuList>
 			</Menu>
 
-			<ThemeEditor navbarIcon={navbarIcon} />
+			{/* <ThemeEditor navbarIcon={navbarIcon} /> */}
 
 			<Menu>
 				<MenuButton p="0px">
 					<Avatar
 						_hover={{ cursor: 'pointer' }}
 						color="white"
-						name="Adela Parkson"
+						name="Aria Vetrunko"
 						bg="#11047A"
 						size="sm"
 						w="40px"
@@ -171,14 +182,14 @@ export default function HeaderLinks(props) {
 							fontSize="sm"
 							fontWeight="700"
 							color={textColor}>
-							👋&nbsp; Hey, Adela
+							👋&nbsp; Hey, Aria
 						</Text>
 					</Flex>
 					<Flex flexDirection="column" p="10px">
 						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
-							<Text fontSize="sm">Profile Settings</Text>
+							<Text fontSize="sm"><NavLink to="/admin/profile">Profile Settings</NavLink></Text>
 						</MenuItem>
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
+						{/* <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
 							<Text fontSize="sm">Newsletter Settings</Text>
 						</MenuItem>
 						<MenuItem
@@ -188,7 +199,7 @@ export default function HeaderLinks(props) {
 							borderRadius="8px"
 							px="14px">
 							<Text fontSize="sm">Log out</Text>
-						</MenuItem>
+						</MenuItem> */}
 					</Flex>
 				</MenuList>
 			</Menu>

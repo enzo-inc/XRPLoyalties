@@ -49,6 +49,8 @@ import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import React from "react";
 import { HSeparator } from "components/separator/Separator";
+import { isConnected, getAddress, getNetwork, getPublicKey } from "@gemwallet/api";
+
 
 import {
   MdAddTask,
@@ -74,6 +76,23 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
 export default function UserReports() {
+  const connect = async () => {
+    const hasWallet = await isConnected();
+    if (hasWallet) {
+      const responsePublicKey = await getPublicKey();
+      if (responsePublicKey) {
+        setAddress();
+        const { address, publicKey } = responsePublicKey;
+        window.open("/admin/default", "_self");
+      }
+    } else {
+      alert(
+        "User doesn't have GemWallet! Please install it: https://gemwallet.app"
+      );
+    }
+  };
+
+
   const currencies = [
     { code: "USD", name: "US Dollar" },
     { code: "EUR", name: "Euro" },
@@ -82,12 +101,6 @@ export default function UserReports() {
     { code: "CAD", name: "Canadian Dollar" },
     { code: "AUD", name: "Australian Dollar" },
   ];
-
-  const [selectedOption, setSelectedOption] = useState("");
-
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
 
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
@@ -104,8 +117,49 @@ export default function UserReports() {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.200" }
   );
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
+  const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [song, setSong] = useState("");
+  const [address, setAddress] = useState("");
+
+  const handleDropdownChangeSong = (event) => {
+    setSong(event.target.value);
+  };
+
+  const handleDropdownChangeCurrency = (event) => {
+    setCurrency(event.target.value);
+  };
+
+  const handleAmountInput = (event) => {
+    setAmount(event.target.value);
+  };
+
+  const handleDistributeFunds = (event) => {
+    setAddress(event.target.value);
+  }
+
+
+
+
+
+  const handleSubmit = (event) => {
+    // transactionBlob = {
+    //   "TransactionType" : "Payment",
+    //   "Account" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+    //   "Destination" : address,
+    //   "Amount" : {
+    //      "currency" : currency,
+    //      "value" : amount,
+    //      "issuer" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
+    //   },
+    //   "Fee": "12",
+    //   "Flags": 2147483648,
+    //   "Sequence": 2,
+    // }
+    
+    console.log("Submitted values: ", amount, currency, song);
+  };
+
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -152,13 +206,16 @@ export default function UserReports() {
               </FormLabel>
               <Select
                 id='balance'
-                variant='mini'
+                variant='transparent'
                 mt='5px'
                 me='0px'
-                defaultValue='usd'>
+                >
                 <option value='usd'>USD</option>
                 <option value='eur'>EUR</option>
-                <option value='gba'>GBA</option>
+                <option value='gbp'>GBP</option>
+                <option value='usd'>JPY</option>
+                <option value='eur'>AUD</option>
+                <option value='gba'>CAD</option>
               </Select>
             </Flex>
           }
@@ -191,6 +248,7 @@ export default function UserReports() {
           name='Total Projects'
           value='10935'
         />
+        <MiniCalendar h='90%' w='80%' minW='80%' selectRange={false} />
 
       {/* <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
         <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
@@ -210,18 +268,17 @@ export default function UserReports() {
           columnsData={columnsDataComplex}
           tableData={tableDataComplex}
         />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-          <Tasks />
-          <MiniCalendar h='100%' minW='100%' selectRange={false} />
-        </SimpleGrid>
-      </SimpleGrid> */}
-        </SimpleGrid>
+      //   <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
+      //     <Tasks />
+      //     <MiniCalendar h='100%' minW='100%' selectRange={false} />
+      //   </SimpleGrid>
+      // </SimpleGrid> */}
 
-
-        <Heading color={textColor} fontSize='36px' mb='10px' align='center'>
+      <Box  align='center'  mb='10px'>
+        
+      <Heading color={textColor} fontSize='36px' mb='10px' align='center'>
             Distribute funds
         </Heading>
-
       <Flex
         zIndex='2'
         direction='column'
@@ -232,6 +289,70 @@ export default function UserReports() {
         mx={{ base: "auto", lg: "unset" }}
         me='auto'
         mb={{ base: "20px", md: "auto" }}>
+
+          <FormControl>
+            <FormLabel
+
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              Amount<Text color={brandStars}>*</Text>
+
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant='auth'
+              fontSize='sm'
+              ms={{ base: "0px", md: "0px" }}
+              type='number'
+              placeholder='min:100'
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+              value={amount}
+              onChange={handleAmountInput}
+            />
+              <Select
+              isRequired={true}
+              variant="subtle"
+              fontSize="sm"
+              ms={{ base: "0px", md: "0px" }}
+              placeholder="Select a currency"
+              mb="24px"
+              fontWeight="500"
+              size="lg"
+              value={currency}
+              onChange={handleDropdownChangeCurrency}
+            >
+              {currencies.map((currency) => (
+                <option key={currency.code} value={currency.code}>
+                  {currency.name} ({currency.code})
+                </option>
+              ))}
+            </Select>
+
+            <Select
+              isRequired={true}
+              variant="transparent"
+              fontSize="sm"
+              ms={{ base: "0px", md: "0px" }}
+              placeholder="Select a song"
+              mb="24px"
+              fontWeight="500"
+              size="lg"
+              value={song}
+              onChange={handleDropdownChangeSong}
+            >
+              <option value="I love London">I love London</option>
+              <option value="I love Paris">I love Paris</option>
+              <option value="Never gonna give you up">Never gonna give you up</option>
+            </Select>
+                
+          </FormControl> 
+
           <Button
             fontSize='sm'
             me='0px'
@@ -244,63 +365,15 @@ export default function UserReports() {
             fontWeight='500'
             _hover={googleHover}
             _active={googleActive}
-            _focus={googleActive}>
-            Distribute funds
+            _focus={googleActive}
+            onClick={handleSubmit}>
+            Distribute funds now
           </Button>
-          <FormControl>
-            <FormLabel
-
-              display='flex'
-              ms='4px'
-              fontSize='sm'
-              fontWeight='500'
-              color={textColor}
-              mb='8px'>
-              Amount<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant='auth'
-              fontSize='sm'
-              ms={{ base: "0px", md: "0px" }}
-              type='number'
-              placeholder='min:100'
-              mb='24px'
-              fontWeight='500'
-              size='lg'
-            />
-              <Select
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              placeholder="..              Select a currency"
-              mb="24px"
-              fontWeight="500"
-              size="lg"
-            >
-              {currencies.map((currency) => (
-                <option key={currency.code} value={currency.code}>
-                  {currency.name} ({currency.code})
-                </option>
-              ))}
-            </Select>
-
-            <Select
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              placeholder="..              Select a song"
-              mb="24px"
-              fontWeight="500"
-              size="lg"
-            >
-              <option value="option1">I love London</option>
-              <option value="option2">I love Paris</option>
-              <option value="option3">Never gonna give you up</option>
-            </Select>
-                  
-          </FormControl> 
         </Flex>
+        </Box>
+        <Tasks w='80%' h='90%' style={{pisition: 'relative', left: '-20%'}}/>
+        </SimpleGrid>
+
       </Box>
   );
 }
