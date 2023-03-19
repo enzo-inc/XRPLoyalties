@@ -139,10 +139,9 @@ export default function UserReports() {
   }
 
   const handleSubmit = async (event) => {
-    alert(
-      "You submitted: ", amount, currency, "to the song: ", song
-    );
     console.log("Submitted values: ", amount, currency, song);
+
+    alert(`You submitted: ${amount} ${currency} to the song: ${song}`);
   };
 
   // Chakra Color Mode
@@ -254,13 +253,15 @@ export default function UserReports() {
 
           <FormControl>
             <FormLabel
-
+              noValidate
+              isRequired={true}
               display='flex'
               ms='4px'
               fontSize='sm'
               fontWeight='500'
               color={textColor}
-              mb='8px'>
+              mb='8px'
+              >
               Amount<Text color={brandStars}>*</Text>
 
             </FormLabel>
@@ -307,6 +308,7 @@ export default function UserReports() {
               size="lg"
               value={song}
               onChange={handleDropdownChangeSong}
+              required='true'
             >
               <option value="I love London">I love London</option>
               <option value="I love Paris">I love Paris</option>

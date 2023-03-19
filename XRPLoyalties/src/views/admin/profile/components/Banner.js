@@ -71,7 +71,7 @@ export default function Banner(props) {
         </Flex>
       </Flex>
 
-      <Flex mx='auto' me='60px' align='center' direction='column'>
+      <Flex mx='auto' me='35px' align='center' direction='column'>
       <Button
           me='100%'
           mb='10px'
