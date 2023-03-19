@@ -13,6 +13,13 @@ export default function Banner(props) {
     "white !important",
     "#111C44 !important"
   );
+  
+  const handleSubmit = async (event) => {
+    alert(
+      "The royalties have been sent to your wallet!"
+    );
+  };
+
   return (
     <Card mb={{base: "0px", lg: "20px" }} align='center' w='100%'>
       <Box
@@ -73,8 +80,9 @@ export default function Banner(props) {
           mt={{ base: "100px", "2xl": "auto" }}
           variant='brand'
           fontWeight='500'
-          fontSize="2xl">
-          Collect Royalties
+          fontSize="2xl"
+          onClick={handleSubmit}>
+            Collect Royalties
         </Button>
         </Flex>
     </Card>

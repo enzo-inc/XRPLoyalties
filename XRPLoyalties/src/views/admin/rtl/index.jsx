@@ -139,7 +139,9 @@ export default function UserReports() {
   }
 
   const handleSubmit = async (event) => {
-    
+    alert(
+      "You submitted: ", amount, currency, "to the song: ", song
+    );
     console.log("Submitted values: ", amount, currency, song);
   };
 
