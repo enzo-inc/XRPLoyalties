@@ -1,5 +1,5 @@
 # XRPLoyalties
-
+Royalty Distribution Platform built on XRPL as part of Paris Blockchain Week 2023.
 
 # Problem
 Royalty distribution costs artist millions because the current processes are inaccurate and obscure. 
